@@ -1,11 +1,7 @@
-from abc import ABC
 from utils import Utils
 import random
 
-class Proxy(ABC):
-    """
-    Interface for classes that implement proxy support
-    """
+class Proxy():
     supported_proxy_protocols = ["http", "https", "socks4", "socks5"]
 
     @classmethod
