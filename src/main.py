@@ -87,8 +87,8 @@ class App:
         client = MongoClient(MONGO_URI)
 
         # create database if not exists
-        client["roblox-scraping"]
-        collection_users = client["roblox-scraping"]["users"]
+        db = client["roblox-scraping"]
+        collection_users = db["users"]
         collection_users.create_index("id", unique=True)
 
         return collection_users
