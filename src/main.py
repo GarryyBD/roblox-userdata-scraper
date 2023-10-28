@@ -6,6 +6,7 @@ import concurrent.futures
 from dotenv import dotenv_values
 from pymongo import MongoClient
 from User import User
+import time
 
 config = dotenv_values(".env")
 
@@ -58,15 +59,23 @@ class App:
     
     @classmethod
     def scrape_username(cls, user_id: int) -> tuple:
-        proxies = Proxy.get_random_proxies(cls.proxies_file)
-        response = httpx.get(f"https://users.roblox.com/v1/users/{user_id}", proxies=proxies)
-        result = response.json()
+        while True:
+            proxies = Proxy.get_random_proxies(cls.proxies_file)
 
-        user = User(result.get("description"), result.get("created"), result.get("isBanned"), result.get("externalAppDisplayName"), result.get("hasVerifiedBadge"), result.get("id"), result.get("name"), result.get("displayName"))
+            try:
+                response = httpx.get(f"https://users.roblox.com/v1/users/{user_id}", proxies=proxies)
+                status_code = response.status_code
+            except Exception as e:
+                print("Proxy error: " + str(e) + " Retrying...")
+            else:
+                if status_code == 429:
+                    print("Rate limited by roblox api. Retrying...")
+                    time.sleep(1)
+                else:
+                    result = response.json()
+                    user = User(result.get("description"), result.get("created"), result.get("isBanned"), result.get("externalAppDisplayName"), result.get("hasVerifiedBadge"), result.get("id"), result.get("name"), result.get("displayName"))
 
-        success = response.status_code == 200
-
-        return success, Utils.return_res(response), user
+                    return status_code == 200, Utils.return_res(response), user
 
     @classmethod
     def get_files_paths(cls) -> tuple:
