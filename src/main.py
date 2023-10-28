@@ -38,7 +38,7 @@ class App:
 
         worked_req = 0
         failed_req = 0
-        total_req = 0
+        total_req = last_user_id
 
         with concurrent.futures.ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
             results = [executor.submit(cls.scrape_username, last_user_id+user_id+1) for user_id in range(MAX_GENERATIONS)]
@@ -51,6 +51,7 @@ class App:
 
                 if has_scraped:
                     worked_req += 1
+                    total_req += 1
                     collection_users.insert_one(user.to_dict())
                 else:
                     failed_req += 1
