@@ -1,5 +1,6 @@
 from dateutil import parser
 
+
 class User:
     def __init__(self, description, created, isBanned, externalAppDisplayName, hasVerifiedBadge, id, name, displayName):
         self.description = description
@@ -10,7 +11,7 @@ class User:
         self.id = id
         self.name = name
         self.displayName = displayName
-    
+
     def to_dict(self):
         """
         Converts the User object to a dict for MongoDB

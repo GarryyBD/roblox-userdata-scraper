@@ -1,9 +1,11 @@
 import os
 
+
 class Utils():
     """
     Utility functions
     """
+
     @staticmethod
     def ensure_directories_exist(directories):
         """
