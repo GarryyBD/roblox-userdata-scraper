@@ -1,13 +1,11 @@
 from utils import Utils
 import random
 
-
 class Proxy():
     supported_proxy_protocols = ["http", "https", "socks4", "socks5"]
 
     @classmethod
-    def write_proxy_line(cls, proxy_type: str, proxy_ip: str, proxy_port: int, proxy_user: str = None,
-                         proxy_pass: str = None) -> str:
+    def write_proxy_line(cls, proxy_type:str, proxy_ip:str, proxy_port:int, proxy_user:str = None, proxy_pass:str = None) -> str:
         """
         Write a correctly formatted proxy line for proxies.txt file
         """
@@ -49,8 +47,7 @@ class Proxy():
                 ))
 
             try:
-                proxy_type_provided, proxy_type, proxy_ip, proxy_port, proxy_user, proxy_pass = cls.get_proxy_values(
-                    line)
+                proxy_type_provided, proxy_type, proxy_ip, proxy_port, proxy_user, proxy_pass = cls.get_proxy_values(line)
             except ValueError as e:
                 raise SyntaxError(str(e), (
                     file_path,
@@ -122,8 +119,7 @@ class Proxy():
         return proxy_type_provided, proxy_type, proxy_ip, proxy_port, proxy_user, proxy_pass
 
     @classmethod
-    def get_proxies(cls, proxy_type: str, proxy_ip: str, proxy_port: int, proxy_user: str = None,
-                    proxy_pass: str = None) -> dict:
+    def get_proxies(cls, proxy_type: str, proxy_ip: str, proxy_port: int, proxy_user: str = None, proxy_pass: str = None) -> dict:
         """
         Returns a dict of proxies
         """
@@ -135,14 +131,14 @@ class Proxy():
             raise ValueError("Invalid Parameters. If proxy has auth, make sure to provide username and password")
 
         if auth:
-            proxies = {"all://": f"{proxy_type}://{proxy_user}:{proxy_pass}@{proxy_ip}:{proxy_port}/"}
+            proxies = { "all://": f"{proxy_type}://{proxy_user}:{proxy_pass}@{proxy_ip}:{proxy_port}/" }
         else:
-            proxies = {"all://": f"{proxy_type}://{proxy_ip}:{proxy_port}/"}
+            proxies = { "all://": f"{proxy_type}://{proxy_ip}:{proxy_port}/" }
 
         return proxies
 
     @classmethod
-    def get_random_proxies(cls, proxies_file_path: str) -> dict:
+    def get_random_proxies(cls, proxies_file_path:str) -> dict:
         """
         Gets random proxies dict from proxies.txt file for httpx module
         """
@@ -152,7 +148,7 @@ class Proxy():
             raise FileNotFoundError("files/proxies.txt path not found. Create it, add proxies and try again")
 
         proxies_list = f.readlines()
-        proxies_list = [*set(proxies_list)]  # remove duplicates
+        proxies_list = [*set(proxies_list)] # remove duplicates
 
         if len(proxies_list) == 0:
             raise Exception("No proxies found in files/proxies.txt. Please add some and try again")
@@ -161,8 +157,7 @@ class Proxy():
         random_line = proxies_list[random.randint(0, len(proxies_list) - 1)]
         random_line = Utils.clear_line(random_line)
         # get proxies dict for httpx module
-        proxy_type_provided, proxy_type, proxy_ip, proxy_port, proxy_user, proxy_pass = cls.get_proxy_values(
-            random_line)
+        proxy_type_provided, proxy_type, proxy_ip, proxy_port, proxy_user, proxy_pass = cls.get_proxy_values(random_line)
         proxies = cls.get_proxies(proxy_type, proxy_ip, proxy_port, proxy_user, proxy_pass)
 
         return proxies
