@@ -10,7 +10,7 @@ class User:
         self.id = id
         self.name = name
         self.displayName = displayName
-    
+
     def to_dict(self):
         """
         Converts the User object to a dict for MongoDB

@@ -18,7 +18,7 @@ except KeyError as e:
     raise KeyError(f"Please make sure to provide {str(e)} in .env file")
 
 class App:
-    @classmethod  
+    @classmethod
     def run(cls):
         App.get_files_paths()
 
@@ -28,7 +28,7 @@ class App:
 
         # get highest user id of collection
         try:
-            last_user_id = collection_users.find_one(sort=[("id", -1)])["id"] 
+            last_user_id = collection_users.find_one(sort=[("id", -1)])["id"]
         except TypeError:
             last_user_id = 0
 
@@ -57,7 +57,7 @@ class App:
                     failed_req += 1
 
                 cls.print_status(worked_req, failed_req, total_req, response_text, has_scraped)
-    
+
     @classmethod
     def scrape_username(cls, user_id: int) -> tuple:
         while True:
@@ -68,6 +68,7 @@ class App:
                 status_code = response.status_code
             except Exception as e:
                 print("Proxy error: " + str(e) + " Retrying...")
+                time.sleep(1)
             else:
                 if status_code == 429:
                     print("Rate limited by roblox api. Retrying...")
@@ -110,6 +111,6 @@ class App:
         """
         print(f"\033[1;32mScraped: {str(req_worked)}\033[0;0m | \033[1;31mFailed: {str(req_failed)}\033[0;0m | \033[1;34mTotal: {str(total_req)}\033[0;0m")
         print(f"\033[1;32mWorked: {response_text}\033[0;0m" if has_worked else f"\033[1;31mFailed: {response_text}\033[0;0m")
-    
+
 if __name__ == '__main__':
     App.run()
